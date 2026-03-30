@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 
@@ -13,24 +12,10 @@ class ConvictionSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionNumber(),
-          const SizedBox(height: 24),
           _buildPullQuote(),
           const SizedBox(height: 24),
           _buildBody(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionNumber() {
-    return Text(
-      '§01',
-      style: GoogleFonts.dmMono(
-        fontSize: 11,
-        letterSpacing: 2,
-        color: AppColors.textTertiary,
-        fontWeight: FontWeight.w400,
       ),
     );
   }

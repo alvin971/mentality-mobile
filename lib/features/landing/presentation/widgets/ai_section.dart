@@ -31,14 +31,6 @@ class AiSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '§05',
-            style: AppTextStyles.mono(
-              fontSize: 11,
-              letterSpacing: 2,
-              color: AppColors.textTertiary,
-            ),
-          ),
           const SizedBox(height: 12),
           Text(
             'Un compagnon psychologique IA',

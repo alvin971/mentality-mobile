@@ -1,145 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 
+/// Footer natif mobile — discret, centré, sans colonnes de liens.
 class AppFooter extends StatelessWidget {
   const AppFooter({super.key});
-
-  static const List<_LinkGroup> _linkGroups = [
-    _LinkGroup(
-      heading: 'Plateforme',
-      links: ['Accueil', 'Les tests', 'Accompagnement', 'Résultats'],
-    ),
-    _LinkGroup(
-      heading: 'Légal',
-      links: [
-        'Politique de confidentialité',
-        'CGU',
-        'Mentions légales',
-      ],
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.footer,
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+      color: AppColors.background,
+      padding: EdgeInsets.fromLTRB(
+        20,
+        32,
+        20,
+        MediaQuery.of(context).padding.bottom + 96,
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildLogoRow(),
-          const SizedBox(height: 8),
-          _buildTagline(),
+          Container(height: 1, color: AppColors.border),
           const SizedBox(height: 28),
-          _buildDivider(),
-          const SizedBox(height: 28),
-          _buildLinks(),
-          const SizedBox(height: 28),
-          _buildDivider(),
+          Text(
+            'mentality',
+            style: GoogleFonts.sourceSerif4(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textTertiary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Évaluation cognitive · Gratuit · RGPD',
+            style: GoogleFonts.dmSans(
+              fontSize: 12,
+              color: AppColors.textTertiary,
+              letterSpacing: 0.3,
+            ),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 20),
-          _buildCopyright(),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 4,
+            children: [
+              _legalLink('Confidentialité'),
+              _dot(),
+              _legalLink('CGU'),
+              _dot(),
+              _legalLink('Contact'),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Text(
+            '© 2026 Mentality',
+            style: GoogleFonts.dmMono(
+              fontSize: 11,
+              color: AppColors.textTertiary,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildLogoRow() {
-    return Text(
-      'mentality',
-      style: GoogleFonts.sourceSerif4(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildTagline() {
-    return Text(
-      'La première plateforme de psychologie complète et gratuite',
-      style: GoogleFonts.dmSans(
-        fontSize: 13,
-        color: const Color(0xFF7A9488),
-        height: 1.5,
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Divider(
-      color: Colors.white.withValues(alpha: 0.1),
-      thickness: 1,
-      height: 1,
-    );
-  }
-
-  Widget _buildLinks() {
-    return Wrap(
-      spacing: 32,
-      runSpacing: 24,
-      children: _linkGroups.map((group) => _LinkGroupWidget(group: group)).toList(),
-    );
-  }
-
-  Widget _buildCopyright() {
-    return Center(
+  Widget _legalLink(String label) {
+    return GestureDetector(
+      onTap: () => HapticFeedback.selectionClick(),
       child: Text(
-        '\u00a9 2026 Mentality \u2014 Tous droits réservés',
-        textAlign: TextAlign.center,
+        label,
         style: GoogleFonts.dmSans(
           fontSize: 12,
-          color: const Color(0xFF3D5248),
+          color: AppColors.textTertiary,
+          decoration: TextDecoration.underline,
+          decorationColor: AppColors.border,
         ),
       ),
     );
   }
-}
 
-class _LinkGroupWidget extends StatelessWidget {
-  final _LinkGroup group;
-
-  const _LinkGroupWidget({required this.group});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          group.heading,
-          style: GoogleFonts.dmSans(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.white.withValues(alpha: 0.4),
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 10),
-        ...group.links.map(
-          (link) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 32),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                foregroundColor: Colors.white.withValues(alpha: 0.6),
-                textStyle: GoogleFonts.dmSans(fontSize: 13),
-              ),
-              child: Text(link),
-            ),
-          ),
-        ),
-      ],
+  Widget _dot() {
+    return Text(
+      ' · ',
+      style: GoogleFonts.dmSans(fontSize: 12, color: AppColors.border),
     );
   }
-}
-
-class _LinkGroup {
-  final String heading;
-  final List<String> links;
-
-  const _LinkGroup({required this.heading, required this.links});
 }

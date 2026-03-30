@@ -53,14 +53,6 @@ class _PlatformSectionState extends State<PlatformSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '§02',
-                  style: AppTextStyles.mono(
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    color: AppColors.textTertiary,
-                  ),
-                ),
                 const SizedBox(height: 12),
                 Text(
                   'Une plateforme de psychologie complète',

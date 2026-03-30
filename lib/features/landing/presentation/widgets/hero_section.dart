@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text_styles.dart';
+import 'urgency_bar.dart';
 
 class HeroSection extends StatelessWidget {
   final int signupCount;
@@ -19,28 +20,29 @@ class HeroSection extends StatelessWidget {
     const totalPlaces = 10000;
     final progress = (signupCount / totalPlaces).clamp(0.0, 1.0);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildEyebrowBadge(),
-          const SizedBox(height: 20),
-          _buildTitle(),
-          const SizedBox(height: 16),
-          _buildSubtitle(),
-          const SizedBox(height: 28),
-          _buildCounter(signupCount, totalPlaces, progress),
-          const SizedBox(height: 28),
-          _buildPrimaryButton(),
-          const SizedBox(height: 16),
-          _buildSecondaryLink(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Badge accès anticipé + urgency
+        Row(
+          children: [
+            _buildEyebrowBadge(),
+            const SizedBox(width: 10),
+            const UrgencyBadge(),
+          ],
+        ),
+        const SizedBox(height: 20),
+        _buildTitle(),
+        const SizedBox(height: 16),
+        _buildSubtitle(),
+        const SizedBox(height: 28),
+        _buildCounter(signupCount, totalPlaces, progress),
+        // Pas de bouton ici — le FAB sticky en bas s'en charge
+      ],
     )
         .animate()
         .fadeIn(duration: 400.ms)
-        .slideY(begin: 0.05, duration: 400.ms, curve: Curves.easeOut);
+        .slideY(begin: 0.04, duration: 400.ms, curve: Curves.easeOut);
   }
 
   Widget _buildEyebrowBadge() {
@@ -100,22 +102,14 @@ class HeroSection extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: ' / ',
+                text: ' / 10 000 ',
                 style: GoogleFonts.dmMono(
                   fontSize: 14,
                   color: AppColors.textTertiary,
                 ),
               ),
               TextSpan(
-                text: '10 000',
-                style: GoogleFonts.dmMono(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              TextSpan(
-                text: ' places réservées',
+                text: 'places réservées',
                 style: GoogleFonts.dmSans(
                   fontSize: 13,
                   color: AppColors.textSecondary,
@@ -140,50 +134,8 @@ class HeroSection extends StatelessWidget {
 
   String _formatNumber(int n) {
     if (n >= 1000) {
-      final thousands = n ~/ 1000;
-      final remainder = n % 1000;
-      return '$thousands ${remainder.toString().padLeft(3, '0')}';
+      return '${n ~/ 1000} ${(n % 1000).toString().padLeft(3, '0')}';
     }
     return n.toString();
-  }
-
-  Widget _buildPrimaryButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: onReserver,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.textPrimary,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2),
-          ),
-          textStyle: GoogleFonts.dmSans(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        child: const Text('Réserver mon accès gratuit →'),
-      ),
-    );
-  }
-
-  Widget _buildSecondaryLink() {
-    return Center(
-      child: TextButton(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.accent,
-          padding: EdgeInsets.zero,
-          textStyle: GoogleFonts.dmSans(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        child: const Text('Découvrir les tests →'),
-      ),
-    );
   }
 }

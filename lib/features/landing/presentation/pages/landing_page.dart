@@ -5,7 +5,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/inscription_repository.dart';
 import '../widgets/app_navbar.dart';
 import '../widgets/hero_section.dart';
-import '../widgets/urgency_bar.dart';
 import '../widgets/stats_section.dart';
 import '../widgets/conviction_section.dart';
 import '../widgets/platform_section.dart';
@@ -15,7 +14,6 @@ import '../widgets/ai_section.dart';
 import '../widgets/roadmap_section.dart';
 import '../widgets/team_section.dart';
 import '../widgets/ethics_section.dart';
-import '../widgets/cta_section.dart';
 import '../widgets/app_footer.dart';
 import '../widgets/registration_form.dart';
 
@@ -42,9 +40,7 @@ class _LandingPageState extends State<LandingPage> {
     try {
       final count = await _repo.fetchSignupCount();
       if (mounted) setState(() => _signupCount = count);
-    } catch (_) {
-      // fallback to default
-    }
+    } catch (_) {}
   }
 
   @override
@@ -77,21 +73,23 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      // Pas de BottomAppBar — on utilise un Stack pour le FAB pleine largeur
       body: Stack(
         children: [
+          // Contenu scrollable
           RefreshIndicator(
             onRefresh: _fetchCount,
             color: AppColors.accent,
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [
-                // Spacer for navbar
-                const SliverToBoxAdapter(child: SizedBox(height: 64)),
+                // Espace pour la navbar flottante
+                const SliverToBoxAdapter(child: SizedBox(height: 72)),
 
                 // Hero
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 32, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                     child: HeroSection(
                       signupCount: _signupCount,
                       onReserver: _openRegistrationForm,
@@ -99,15 +97,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
 
-                // Urgency bar
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 24),
-                    child: UrgencyBar(),
-                  ),
-                ),
-
-                // Stats
+                // Stats — grille 2×2 native
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
@@ -115,93 +105,77 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
 
-                // §01 Conviction
+                // Conviction
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const ConvictionSection(),
                   ),
                 ),
 
-                // §02 Platform
+                // Plateforme — PageView carousel
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 56),
+                    padding: const EdgeInsets.only(top: 48),
                     child: PlatformSection(),
                   ),
                 ),
 
-                // §03 Cognitive Profile
+                // Profil cognitif
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const CognitiveProfileSection(),
                   ),
                 ),
 
-                // §04 Tests
+                // Tests WAIS-IV
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const TestsSection(),
                   ),
                 ),
 
-                // §05 AI
+                // IA
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const AiSection(),
                   ),
                 ),
 
-                // §06 Roadmap
+                // Roadmap
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const RoadmapSection(),
                   ),
                 ),
 
-                // §07 Team
+                // Équipe
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 56),
+                    padding: const EdgeInsets.only(top: 48),
                     child: const TeamSection(),
                   ),
                 ),
 
-                // §08 Ethics
+                // Charte éthique
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 20, 0),
                     child: const EthicsSection(),
                   ),
                 ),
 
-                // CTA final
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
-                    child: CtaSection(onReserver: _openRegistrationForm),
-                  ),
-                ),
-
-                // Footer
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 56),
-                    child: AppFooter(),
-                  ),
-                ),
-
-                // Bottom spacing for FAB
-                const SliverToBoxAdapter(child: SizedBox(height: 80)),
+                // Footer minimal — pas de footer web
+                const SliverToBoxAdapter(child: AppFooter()),
               ],
             ),
           ),
 
-          // Floating Navbar
+          // Navbar flottante en haut
           Positioned(
             top: 0,
             left: 0,
@@ -211,33 +185,63 @@ class _LandingPageState extends State<LandingPage> {
               scrollController: _scrollController,
             ),
           ),
+
+          // CTA sticky en bas — pattern app mobile natif
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _StickyCtaBar(onReserver: _openRegistrationForm),
+          ),
         ],
       ),
+    );
+  }
+}
 
-      // Sticky bottom CTA
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-        child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: _openRegistrationForm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(2),
-              ),
-              elevation: 4,
-              shadowColor: AppColors.accent.withValues(alpha: 0.3),
+/// Barre CTA sticky — style app mobile (pas de FAB rond, pleine largeur).
+class _StickyCtaBar extends StatelessWidget {
+  final VoidCallback onReserver;
+
+  const _StickyCtaBar({required this.onReserver});
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        border: const Border(
+          top: BorderSide(color: AppColors.border),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, bottomPadding + 12),
+      child: SizedBox(
+        height: 50,
+        child: ElevatedButton(
+          onPressed: onReserver,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.textPrimary,
+            foregroundColor: AppColors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2),
             ),
-            child: const Text(
-              'Réserver mon accès gratuit →',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-              ),
+            elevation: 0,
+          ),
+          child: Text(
+            'Réserver mon accès gratuit',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 15,
+              color: AppColors.white,
             ),
           ),
         ),

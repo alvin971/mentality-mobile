@@ -52,14 +52,6 @@ class RoadmapSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '§06',
-            style: AppTextStyles.mono(
-              fontSize: 11,
-              letterSpacing: 2,
-              color: AppColors.textTertiary,
-            ),
-          ),
           const SizedBox(height: 12),
           Text(
             'Ce qui arrive',
