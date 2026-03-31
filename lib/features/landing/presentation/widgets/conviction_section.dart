@@ -7,7 +7,8 @@ class ConvictionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      color: AppColors.footer,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,11 +33,11 @@ class ConvictionSection extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(left: 16),
       child: Text(
-        'En France, un bilan neuropsychologique coûte entre 500 \u20ac et 1 500 \u20ac. Ce chiffre exclut des millions de personnes de la connaissance de soi.',
+        'En France, un bilan neuropsychologique coûte entre 500\u202f€ et 1\u202f500\u202f€. Ce chiffre exclut des millions de personnes de la connaissance de soi.',
         style: AppTextStyles.serif(
           fontSize: 18,
           fontStyle: FontStyle.italic,
-          color: AppColors.textSecondary,
+          color: const Color(0xFFB0C4B8),
           height: 1.5,
         ),
       ),
@@ -45,10 +46,10 @@ class ConvictionSection extends StatelessWidget {
 
   Widget _buildBody() {
     return Text(
-      'Mentality rend cette évaluation accessible à tous, gratuitement. Parce que comprendre son fonctionnement cognitif, ses émotions, ses forces et ses fragilités ne devrait pas nécessiter des centaines d\u2019euros.',
+      'Mentality rend cette évaluation accessible à tous, gratuitement. Parce que comprendre son fonctionnement cognitif, ses émotions, ses forces et ses fragilités ne devrait pas nécessiter des centaines d\'euros.',
       style: AppTextStyles.sans(
         fontSize: 15,
-        color: AppColors.textSecondary,
+        color: const Color(0xFF8BA898),
         height: 1.65,
       ),
     );

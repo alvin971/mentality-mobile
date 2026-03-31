@@ -3,50 +3,63 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/theme/app_text_styles.dart';
 
-class EthicsSection extends StatelessWidget {
+class EthicsSection extends StatefulWidget {
   const EthicsSection({super.key});
 
-  static const List<_EthicsCard> _cards = [
-    _EthicsCard(
+  @override
+  State<EthicsSection> createState() => _EthicsSectionState();
+}
+
+class _EthicsSectionState extends State<EthicsSection> {
+  int? _expandedIndex;
+
+  static const List<_EthicsItem> _items = [
+    _EthicsItem(
       icon: Icons.volunteer_activism,
       title: 'Gratuit pour toujours',
-      description: 'Jamais de paywall sur le bilan cognitif',
+      description:
+          'Jamais de paywall sur le bilan cognitif. L\'accès aux tests et aux résultats restera toujours gratuit.',
     ),
-    _EthicsCard(
+    _EthicsItem(
       icon: Icons.info_outline,
       title: 'Non-diagnostic',
-      description: 'Résultats informatifs, jamais diagnostiques',
+      description:
+          'Nos résultats sont informatifs, jamais diagnostiques. Seul un professionnel de santé peut poser un diagnostic.',
     ),
-    _EthicsCard(
+    _EthicsItem(
       icon: Icons.lock_outline,
       title: 'Données protégées',
-      description: 'Anonymisation RGPD, aucune revente',
+      description:
+          'Anonymisation RGPD stricte. Vos données ne sont jamais revendues, ni partagées avec des tiers.',
     ),
-    _EthicsCard(
+    _EthicsItem(
       icon: Icons.people_outline,
       title: 'Accessible à tous',
-      description: '10 langues, mobile & desktop',
+      description:
+          'Disponible en 10 langues, sur mobile et desktop, sans barrière technique ni financière.',
     ),
-    _EthicsCard(
+    _EthicsItem(
       icon: Icons.favorite_border,
       title: 'Orienté vers le soin',
-      description: 'Orientation vers des professionnels si nécessaire',
+      description:
+          'En cas de résultats préoccupants, nous orientons vers des professionnels de santé qualifiés.',
     ),
-    _EthicsCard(
+    _EthicsItem(
       icon: Icons.science_outlined,
       title: 'Fondé sur la science',
-      description: 'Chaque item validé cliniquement',
+      description:
+          'Chaque item est validé cliniquement selon les standards de la psychologie cognitive internationale.',
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      color: AppColors.surface,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
           Text(
             'Notre charte éthique',
             style: AppTextStyles.serif(
@@ -56,69 +69,102 @@ class EthicsSection extends StatelessWidget {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 24),
-          GridView.count(
-            crossAxisCount: 2,
-            childAspectRatio: 0.85,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            children: _cards.map((card) => _EthicsCardWidget(card: card)).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EthicsCardWidget extends StatelessWidget {
-  final _EthicsCard card;
-
-  const _EthicsCardWidget({required this.card});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border, width: 1),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(card.icon, size: 24, color: AppColors.accent),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
-            card.title,
+            'Les principes qui guident chacune de nos décisions.',
             style: GoogleFonts.dmSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            card.description,
-            style: GoogleFonts.dmSans(
-              fontSize: 12,
+              fontSize: 14,
               color: AppColors.textSecondary,
               height: 1.5,
             ),
           ),
+          const SizedBox(height: 28),
+          ...List.generate(_items.length, (i) {
+            final item = _items[i];
+            final isExpanded = _expandedIndex == i;
+            final isLast = i == _items.length - 1;
+            return Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _expandedIndex = isExpanded ? null : i;
+                    });
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(item.icon, size: 22, color: AppColors.accent),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                item.title,
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              isExpanded
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              size: 20,
+                              color: AppColors.textTertiary,
+                            ),
+                          ],
+                        ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 220),
+                          curve: Curves.easeInOut,
+                          child: isExpanded
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 10,
+                                    left: 34,
+                                  ),
+                                  child: Text(
+                                    item.description,
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 13,
+                                      color: AppColors.textSecondary,
+                                      height: 1.55,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (!isLast)
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: AppColors.border,
+                  ),
+              ],
+            );
+          }),
         ],
       ),
     );
   }
 }
 
-class _EthicsCard {
+class _EthicsItem {
   final IconData icon;
   final String title;
   final String description;
 
-  const _EthicsCard({
+  const _EthicsItem({
     required this.icon,
     required this.title,
     required this.description,

@@ -3,30 +3,59 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 
-/// Footer natif mobile — discret, centré, sans colonnes de liens.
-class AppFooter extends StatelessWidget {
+class AppFooter extends StatefulWidget {
   const AppFooter({super.key});
+
+  @override
+  State<AppFooter> createState() => _AppFooterState();
+}
+
+class _AppFooterState extends State<AppFooter>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _rotationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.background,
+      color: AppColors.footer,
       padding: EdgeInsets.fromLTRB(
         20,
-        32,
+        48,
         20,
-        MediaQuery.of(context).padding.bottom + 96,
+        MediaQuery.of(context).padding.bottom + 48,
       ),
       child: Column(
         children: [
-          Container(height: 1, color: AppColors.border),
-          const SizedBox(height: 28),
+          RotationTransition(
+            turns: _rotationController,
+            child: const Icon(
+              Icons.radio_button_unchecked,
+              color: AppColors.accent,
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: 20),
           Text(
             'mentality',
             style: GoogleFonts.sourceSerif4(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: AppColors.textTertiary,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 6),
@@ -34,12 +63,12 @@ class AppFooter extends StatelessWidget {
             'Évaluation cognitive · Gratuit · RGPD',
             style: GoogleFonts.dmSans(
               fontSize: 12,
-              color: AppColors.textTertiary,
+              color: const Color(0xFF6B8070),
               letterSpacing: 0.3,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 4,
@@ -56,7 +85,7 @@ class AppFooter extends StatelessWidget {
             '© 2026 Mentality',
             style: GoogleFonts.dmMono(
               fontSize: 11,
-              color: AppColors.textTertiary,
+              color: const Color(0xFF4A5E52),
             ),
             textAlign: TextAlign.center,
           ),
@@ -72,9 +101,9 @@ class AppFooter extends StatelessWidget {
         label,
         style: GoogleFonts.dmSans(
           fontSize: 12,
-          color: AppColors.textTertiary,
+          color: AppColors.accent,
           decoration: TextDecoration.underline,
-          decorationColor: AppColors.border,
+          decorationColor: AppColors.accent.withValues(alpha: 0.4),
         ),
       ),
     );
@@ -83,7 +112,8 @@ class AppFooter extends StatelessWidget {
   Widget _dot() {
     return Text(
       ' · ',
-      style: GoogleFonts.dmSans(fontSize: 12, color: AppColors.border),
+      style: GoogleFonts.dmSans(
+          fontSize: 12, color: const Color(0xFF4A5E52)),
     );
   }
 }
